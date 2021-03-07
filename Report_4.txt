@@ -1,0 +1,37 @@
+Samuel Reina
+CIS4362
+Intro to Cryptology
+Ex4 Report
+
+genKeys
+
+1) First we check to see if we have enough arguments, if we don’t we print an error message and terminate the program.
+2) We then take in the first command line argument and attempt to convert it to an integer.
+3) We then check that our number of rounds is valid. If it is not, we print an error message, and terminate the program.
+4) We then take in user input and store it in a string. We make sure the input is valid, if it is not, we print an error message and terminate the program.
+5) After all this, we break the original master key into 3 groups of 3 and push these into a vector. This is helpful since we use column vectors for our calculations.
+6) We rotate our first column vector, perform a substitution on it and then add our corresponding i-3 key value. To this we then add our i-1 key value and return this manipulated column vector.
+7) We will use this manipulated column vector and add it onto our other two parts of our key (remember that we broke up the original key int 3 blocks of 3) to get the key for the next round. This gives us the key for the next round. We will perform this process however many times as indicated by the number of rounds put in. Using the key for round i to determine the key for round i +1.
+
+SAESe
+
+1) We begin by taking all the same steps as in genKeys to perform validation checks and get the round keys that will be used for encrypting our user input.
+2) After this is done, we take user input and sanitize it to remove any wanted/unencryptable characters. Following this, we pad the input so that we can break it up into blocks of 3. We push these blocks of 3 into a vector. We will iterate over this vector to make sure we encrypt every input block.
+3) Now we can begin encrypting. As mentioned before, we will use a for loop to iterate over the blocks so that we can encrypt each one. At the begin of our iterations we will declare three temporary strings, each of which well set equal to one of three blocks of 3 (This means that we encrypt 9 characters at a time, but by breaking the characters into blocks of 3 we can manipulate them as if they were column vectors)
+4) We perform an initial whiten to each of these strings with the first key (remember that our key is also broken into 3 groups of 3, much like the character blocks). After this, we perform a substitution with a given matrix, followed by a shift (2nd row shift left once, 3rd row shifts left twice), followed by a mixing of the characters ( each character is found with the following formula:((x*13 + 17) % 37); if it is not the last encryption round), and finally we whiten again with the corresponding round key (ie. We finish round one, by whitening with key one)
+5) We append the results of our encryption to an output string, and then continue with encrypting the rest of the character blocks with the same process.
+6) We pass our output string, into our print method which prints out our output into uppercase letters in groups of 5 characters at a time.
+
+SAESd
+
+1) We begin by taking all the same steps as in genKeys to perform validation checks and get the round keys that will be used for encrypting our user input.
+2) After this is done, we take user input and sanitize it to remove any wanted/unencryptable characters. Following this, we pad the input so that we can break it up into blocks of 3. We push these blocks of 3 into a vector. We will iterate over this vector to make sure we encrypt every input block.
+3) We can now begin decrypting. Given that decryption simply means reversing the process with which we encrypted the original message, I chose to make inverse versions of every functions that I used to encrypt. Thus, where we used to whiten with addition, we unwhite with subtraction; where we mixed, we now unmix; shift, unshift; and so on. After creating the inverse of all these functions, all we have to do now is follow our encryption process backwards.
+4) The process should be as follows, and once again makes use of the 3 groups of 3 methodology described earlier. First we take our first three groups and unwhiten them with the round key. This is followed by unmixing if this isn't the first round of decryption (Thus, the last round of encryption). After this, we unshift and then unsub, then unwhiten once more with the previous rounds' key. We append the output of this to our output string, and continue processing our blocks of characters.
+5) We pass our output string, into our print method which prints out our output into lowercase letters in groups of 5 characters at a time.
+
+Testing
+
+All programs were tested with various different user inputs using a mix of all printable ascii characters. Upper and lower cases were also accounted for as well as variable white spacing. All were tested with empty inputs as well.
+
+
